@@ -6,14 +6,14 @@ import org.springframework.data.annotation.Id;
 
 @Data
 @AllArgsConstructor
-public class Producto {
+public class Productos {
 
-    @Id
-    private Integer id;
+//    @Id
+//    private Integer id;
 
     private String nombre;
     private String fotoUrl;
     private double precio;
     private int stock;
-    
+
 }

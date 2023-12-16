@@ -1,6 +1,6 @@
 package me.boris.bqmongo.controller;
 
-import me.boris.bqmongo.model.Producto;
+import me.boris.bqmongo.model.Productos;
 import me.boris.bqmongo.service.impl.ProductoServiceImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,17 +15,15 @@ import java.util.stream.StreamSupport;
 @RestController
 @RequestMapping("/api/producto")
 public class ProductoController {
-
-    @Autowired
-    public ProductoServiceImplement productoServiceImplement;
-
-
-    private Optional<Producto> productoOptional;
-
+    public final ProductoServiceImplement productoServiceImplement;
+    private Optional<Productos> productoOptional;
+    public ProductoController(ProductoServiceImplement productoServiceImplement) {
+        this.productoServiceImplement = productoServiceImplement;
+    }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Producto producto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productoServiceImplement.save(producto));
+    public ResponseEntity<?> create(@RequestBody Productos productos) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productoServiceImplement.save(productos));
     }
 
     @GetMapping("/{id}")
@@ -50,24 +48,22 @@ public class ProductoController {
     }
 
     @GetMapping
-    public List<Producto> findAll() {
+    public List<Productos> findAll() {
         return StreamSupport.stream(productoServiceImplement.findAll().spliterator(), false).collect(Collectors.toList());
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Producto producto) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Productos productos) {
         productoOptional = productoServiceImplement.findById(id);
-
         if (productoOptional.isPresent()) {
-            productoOptional.get().setNombre(producto.getNombre());
-            productoOptional.get().setPrecio(producto.getPrecio());
-            productoOptional.get().setStock(producto.getStock());
-            productoOptional.get().setFotoUrl(producto.getFotoUrl());
+            productoOptional.get().setNombre(productos.getNombre());
+            productoOptional.get().setPrecio(productos.getPrecio());
+            productoOptional.get().setStock(productos.getStock());
+            productoOptional.get().setFotoUrl(productos.getFotoUrl());
             return ResponseEntity.status(HttpStatus.CREATED).body(productoServiceImplement.save(productoOptional.get()));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
 }
