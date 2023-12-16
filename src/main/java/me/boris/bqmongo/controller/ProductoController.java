@@ -1,5 +1,6 @@
 package me.boris.bqmongo.controller;
 
+import me.boris.bqmongo.dto.ProductosDto;
 import me.boris.bqmongo.model.Productos;
 import me.boris.bqmongo.service.impl.ProductoServiceImplement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,12 +24,19 @@ public class ProductoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Productos productos) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productoServiceImplement.save(productos));
+    public ResponseEntity<?> create(@RequestBody ProductosDto productos) {
+
+        Productos producto = new Productos();
+        producto.setNombre(productos.getNombre());
+        producto.setFotoUrl(productos.getFotoUrl());
+        producto.setPrecio(productos.getPrecio());
+        producto.setStock(productos.getStock());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productoServiceImplement.save(producto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> read(@PathVariable Integer id) {
+    public ResponseEntity<?> read(@PathVariable String id) {
         productoOptional = productoServiceImplement.findById(id);
         if (productoOptional.isPresent()) {
             return ResponseEntity.ok(productoOptional);
@@ -37,7 +46,7 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         productoOptional = productoServiceImplement.findById(id);
         if (productoOptional.isPresent()) {
             productoServiceImplement.deleteById(id);
@@ -48,13 +57,13 @@ public class ProductoController {
     }
 
     @GetMapping
-    public List<Productos> findAll() {
-        return StreamSupport.stream(productoServiceImplement.findAll().spliterator(), false).collect(Collectors.toList());
+    public Iterable<Productos> findAll() {
+        return productoServiceImplement.findAll();
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Productos productos) {
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody ProductosDto productos) {
         productoOptional = productoServiceImplement.findById(id);
         if (productoOptional.isPresent()) {
             productoOptional.get().setNombre(productos.getNombre());

@@ -10,10 +10,14 @@ public class Productos {
 
 //    @Id
 //    private Integer id;
+    private String _id;
 
     private String nombre;
     private String fotoUrl;
     private double precio;
     private int stock;
+
+    public Productos() {
+    }
 
 }

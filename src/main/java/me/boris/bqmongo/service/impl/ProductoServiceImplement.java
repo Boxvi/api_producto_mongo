@@ -8,13 +8,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductoServiceImplement extends GenericServiceImplement<Productos,Integer> implements ProductoService {
+public class ProductoServiceImplement extends GenericServiceImplement<Productos,String> implements ProductoService {
     private final ProductoRepository productoRepository;
     public ProductoServiceImplement(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
     @Override
-    public CrudRepository<Productos, Integer> crudRepository() {
+    public CrudRepository<Productos, String> crudRepository() {
         return productoRepository;
     }
 }
